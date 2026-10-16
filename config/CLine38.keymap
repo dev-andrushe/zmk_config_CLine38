@@ -8,8 +8,15 @@
 #include <dt-bindings/zmk/pointing.h>
 
 &mt {
-    flavor = "balanced";
+    flavor = "hold-preferred";
     quick-tap-ms = <0>;
+    retro-tap;
+};
+
+&lt {
+    flavor = "hold-preferred";
+    quick-tap-ms = <0>;
+    retro-tap;
 };
 
 / {
