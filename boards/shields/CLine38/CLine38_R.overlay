@@ -11,6 +11,22 @@
 
 
 / {
+    // DYA Studioによる倍率・軸変換後の値を追跡するため、慣性出力は1:1。
+    // 初期600 CPI / 1:8に合わせた開始値。実機で必要に応じて調整する。
+    scroll_inertia: scroll_inertia {
+        compatible = "zmk,input-processor-scroll-inertia";
+        #input-processor-cells = <0>;
+        axis = <0>;
+        layer = <3>;
+        scale = <1>;
+        scale-div = <1>;
+        start = <3>;
+        move = <6>;
+        stop = <1>;
+        friction = <3>;
+        limit = <45>;
+    };
+
     trackball_listener {
         status = "okay";
         compatible = "zmk,input-listener";
@@ -82,7 +98,8 @@
             <&zip_xy_to_scroll_mapper>,                         //スクロールモードに変更
             <&zip_scroll_transform INPUT_TRANSFORM_X_INVERT>,   //スクロールのX軸反転
             //<&zip_scroll_transform INPUT_TRANSFORM_Y_INVERT>,   //スクロールのY軸反転
-            <&scroll_runtime_input_processor>;                  //スクロール量・軸スナップをDYA Studioから調整可能に
+            <&scroll_runtime_input_processor>,                  //スクロール量・軸スナップをDYA Studioから調整可能に
+            <&scroll_inertia>;                                  //最終スクロール値を追跡し、レイヤー3解除で停止
     };
 };
 

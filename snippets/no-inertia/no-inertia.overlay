@@ -1,0 +1,13 @@
+// CLine38_R用。通常のスクロール処理を残し、慣性モジュールを無効化する。
+&scroll_inertia {
+    status = "disabled";
+};
+
+&trackball_listener {
+    scroller {
+        input-processors = <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>,
+            <&zip_xy_to_scroll_mapper>,
+            <&zip_scroll_transform INPUT_TRANSFORM_X_INVERT>,
+            <&scroll_runtime_input_processor>;
+    };
+};

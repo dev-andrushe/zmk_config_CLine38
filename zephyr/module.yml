@@ -2,3 +2,4 @@ name: CLine38
 build:
   settings:
     board_root: .
+    snippet_root: .
