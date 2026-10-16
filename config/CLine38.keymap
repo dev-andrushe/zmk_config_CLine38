@@ -125,5 +125,47 @@
          &trans   &trans   &trans   &trans   &trans      &trans   &trans                     &trans
             >;
         };
+
+        // ころころKit: DYA Studioで任意のキーに MO 7〜10 を割り当てる。
+        gesture_1 {
+            display-name = "GESTURE1";
+            bindings = <
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans
+            >;
+        };
+
+        gesture_2 {
+            display-name = "GESTURE2";
+            bindings = <
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans
+            >;
+        };
+
+        gesture_3 {
+            display-name = "GESTURE3";
+            bindings = <
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans
+            >;
+        };
+
+        gesture_4 {
+            display-name = "GESTURE4";
+            bindings = <
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans
+            >;
+        };
+
     };
 };

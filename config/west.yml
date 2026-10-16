@@ -8,6 +8,10 @@ manifest:
       url-base: https://github.com/caksoylar
     - name: takamaru-fpv  # <-- Battery level smoothing
       url-base: https://github.com/takamaru-fpv
+    - name: kot149
+      url-base: https://github.com/kot149
+    - name: jpttm
+      url-base: https://github.com/jpttm
 
   projects:
     # ZMK: DYA Studio 用カスタム RPC サブシステム付き cormoran fork
@@ -66,6 +70,19 @@ manifest:
     - name: zmk-feature-module-physical-layout
       remote: cormoran
       revision: 4f18de45dc27820725d267916b4cdacc0e0b6cf9
+
+    # ころころKit: 認識 / レイヤー振り分け / 動作の保存・Studio RPC
+    # 検証対象のコミットに固定 (2026-10-17)。ZMK/DYA 本体の版は維持する。
+    - name: zmk-mouse-gesture
+      remote: kot149
+      # v1
+      revision: a3f70a2a189f6fa34a0b696dea50b73368ce5750
+    - name: zmk-input-processor-layer-router
+      remote: jpttm
+      revision: e1644b4170833905b0d8ce27194dba0350aeb972
+    - name: zmk-feature-gesture-action
+      remote: jpttm
+      revision: cb69e5b1009987051cf1774344d36ee20e758e94
 
     #その他のモジュール
     - name: zmk-pmw3610-driver
