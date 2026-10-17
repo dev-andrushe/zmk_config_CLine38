@@ -27,7 +27,7 @@
     mixed_scroll_runtime: mixed_scroll_runtime {
         compatible = "zmk,input-processor-runtime";
         #input-processor-cells = <0>;
-        processor-label = "mixed_scroll";
+        processor-label = "mixed";
         type = <INPUT_EV_REL>;
         x-codes = <INPUT_REL_HWHEEL>;
         y-codes = <INPUT_REL_WHEEL>;
