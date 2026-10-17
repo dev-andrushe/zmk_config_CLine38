@@ -4,3 +4,22 @@ config CLINE38_MIXED_SCROLL
     depends on DT_HAS_ZMK_INPUT_PROCESSOR_MIXED_SCROLL_ENABLED
     depends on ZMK_INPUT_PROCESSOR_LAYER_ROUTER
     depends on !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL
+
+config CLINE38_RETRO_POINTER
+    bool "Resolve Retro Tap holds with physical trackball motion"
+    default y
+    depends on DT_HAS_PIXART_PMW3610_ALT_ENABLED
+    depends on ZMK_BEHAVIOR_HOLD_TAP && ZMK_INPUT_LISTENER
+    depends on !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL
+
+config CLINE38_RETRO_POINTER_THRESHOLD
+    int "Raw movement counts required to resolve a Retro Tap hold"
+    default 8
+    range 1 32767
+    depends on CLINE38_RETRO_POINTER
+
+config CLINE38_RETRO_POINTER_IDLE_MS
+    int "Discard sub-threshold motion after this idle time"
+    default 150
+    range 1 1000
+    depends on CLINE38_RETRO_POINTER
