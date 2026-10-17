@@ -11,6 +11,41 @@
 
 
 / {
+    mixed_scroll: mixed_scroll {
+        compatible = "zmk,input-processor-mixed-scroll";
+        #input-processor-cells = <0>;
+        route-index = <0>; // ころころKitのGroup 1。保存済みの対象レイヤーにも追従する。
+        bindings = <&gesture_action 2>, <&gesture_action 3>;
+        direction-threshold = <8>;
+        gesture-threshold = <100>;
+        diagonal-threshold = <24>;
+        idle-ms = <250>;
+    };
+
+    // このモードは通常マウスの倍率を通さず、専用の倍率を一度だけ適用する。
+    // レイヤー3のscroll設定と分離し、慣性プロセッサも接続しない。
+    mixed_scroll_runtime: mixed_scroll_runtime {
+        compatible = "zmk,input-processor-runtime";
+        #input-processor-cells = <0>;
+        processor-label = "mixed_scroll";
+        type = <INPUT_EV_REL>;
+        x-codes = <INPUT_REL_HWHEEL>;
+        y-codes = <INPUT_REL_WHEEL>;
+        scale-multiplier = <1>;
+        scale-divisor = <8>;
+        rotation-degrees = <0>;
+        track-remainders;
+        temp-layer-transparent-behavior = <&trans>;
+        temp-layer-kp-behavior = <&kp>;
+        temp-layer-keep-keycodes = <LEFT_CONTROL LEFT_SHIFT LEFT_ALT LEFT_GUI RIGHT_CONTROL RIGHT_SHIFT RIGHT_ALT RIGHT_GUI>;
+    };
+
+    mixed_scroll_listener {
+        compatible = "zmk,input-listener";
+        device = <&mixed_scroll>;
+        input-processors = <&mixed_scroll_runtime>;
+    };
+
     // DYA Studioによる倍率・軸変換後の値を追跡するため、慣性出力は1:1。
     // 初期600 CPI / 1:8に合わせた開始値。実機で必要に応じて調整する。
     scroll_inertia: scroll_inertia {
@@ -81,7 +116,8 @@
 // Overrides for the input listener node
 &trackball_listener {
     status = "okay";
-    input-processors =<&mouse_runtime_input_processor>,
+    input-processors = <&mixed_scroll>,                       //Group 1を生のXYから先に分岐
+        <&mouse_runtime_input_processor>,
         //<&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>;         //Y軸反転
         //<&zip_xy_transform INPUT_TRANSFORM_XY_SWAP>,        //X軸とY軸の入れ替え
         <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>,       //X軸反転
@@ -109,6 +145,19 @@
 // 0〜6は既存用途として予約する。レイヤー3のスクロール上書きも維持する。
 &gesture_action {
     reserved-layers = <0 1 2 3 4 5 6>;
+    // Group 1の上下スロットは使用しない。左右のみころころKitで変更可能。
+    // Group 2〜4の初期値は標準プリセットと同一。
+    default-bindings =
+        <&none>, <&none>, <&kp LA(LEFT)>, <&kp LA(RIGHT)>,
+        <&kp LG(TAB)>, <&kp LG(D)>, <&kp LC(LG(LEFT))>, <&kp LC(LG(RIGHT))>,
+        <&kp LC(HOME)>, <&kp LC(END)>, <&kp LA(LEFT)>, <&kp LA(RIGHT)>,
+        <&kp LC(Z)>, <&kp LC(Y)>, <&kp LC(C)>, <&kp LC(V)>;
+};
+
+&zip_layer_router {
+    group1 {
+        display-name = "Group 1: Scroll + Navigation";
+    };
 };
 
 // スクロール用のランタイム入力プロセッサ。
