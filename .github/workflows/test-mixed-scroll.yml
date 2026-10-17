@@ -18,9 +18,3 @@ jobs:
           cc -std=c11 -Wall -Wextra -Werror -fsanitize=undefined -o /tmp/retro-pointer-test tests/retro_pointer_test.c
           /tmp/retro-pointer-test
           python -m unittest discover -s tests -p 'test_*.py'
-      - name: Test slow zoom step size, rate limit and horizontal gestures
-        run: |
-          cc -std=c11 -Wall -Wextra -Werror -fsanitize=undefined -o /tmp/slow-zoom-test tests/slow_zoom_test.c
-          /tmp/slow-zoom-test
-          cc -std=c11 -Wall -Wextra -Werror -fsanitize=undefined -o /tmp/slow-zoom-inertia-test tests/slow_zoom_inertia_test.c
-          /tmp/slow-zoom-inertia-test

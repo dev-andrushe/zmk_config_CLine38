@@ -11,15 +11,6 @@
 
 
 / {
-    slow_zoom: slow_zoom {
-        compatible = "zmk,input-processor-slow-zoom";
-        #input-processor-cells = <0>;
-        layer = <8>;
-        counts-per-step = <64>; // 通常スクロール初期値1/8の8倍の移動で1段階
-        min-interval-ms = <200>;
-        ctrl-settle-ms = <40>;
-    };
-
     mixed_scroll: mixed_scroll {
         compatible = "zmk,input-processor-mixed-scroll";
         #input-processor-cells = <0>;
@@ -134,15 +125,6 @@
         //<&zip_temp_layer 2 1000>;                            //オートマウスレイヤーの選択;
 
 
-    // 8を先に判定。3と同時に有効でもズームには慣性を通さない。
-    zoomer {
-        layers = <8>;
-        input-processors = <&slow_zoom>,
-            <&mouse_runtime_input_processor>,
-            <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>,
-            <KOROKORO_GESTURES>;
-    };
-
     scroller {
         layers = <3>;
         input-processors = 
@@ -175,9 +157,6 @@
 &zip_layer_router {
     group1 {
         display-name = "Group 1: Scroll + Navigation";
-    };
-    group2 {
-        display-name = "Group 2: L8 Zoom + Desktop";
     };
 };
 
