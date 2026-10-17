@@ -31,6 +31,10 @@ struct slow_zoom_device_data {
     bool active, ctrl_owned, ctrl_ready;
 };
 
+#if IS_ENABLED(CONFIG_ZMK_INPUT_PROCESSOR_SCROLL_INERTIA)
+void cline38_zoom_cancel_inertia(void);
+#endif
+
 static void zoom_lock(void) {
 #if IS_ENABLED(CONFIG_CLINE38_RETRO_POINTER)
     cline38_retro_lock();
@@ -65,6 +69,13 @@ static void zoom_sync_layer(const struct device *dev) {
     }
     data->active = active;
     slow_zoom_reset(&data->motion, k_uptime_get());
+    if (active) {
+#if IS_ENABLED(CONFIG_ZMK_INPUT_PROCESSOR_SCROLL_INERTIA)
+        /* Layer 3 may still be held while layer 8 is entered. Its direct HID
+         * inertia output must stop before Ctrl is enabled for zoom. */
+        cline38_zoom_cancel_inertia();
+#endif
+    }
     zoom_release_ctrl(data);
 }
 

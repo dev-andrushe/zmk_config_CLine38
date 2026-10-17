@@ -22,3 +22,5 @@ jobs:
         run: |
           cc -std=c11 -Wall -Wextra -Werror -fsanitize=undefined -o /tmp/slow-zoom-test tests/slow_zoom_test.c
           /tmp/slow-zoom-test
+          cc -std=c11 -Wall -Wextra -Werror -fsanitize=undefined -o /tmp/slow-zoom-inertia-test tests/slow_zoom_inertia_test.c
+          /tmp/slow-zoom-inertia-test
