@@ -44,6 +44,18 @@
     };
 
     behaviors {
+        // レイヤー1用。通常の&ltと&mtのRetro Tap設定には影響しない。
+        lt1: layer_tap_1_no_retro {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            display-name = "Layer-Tap 1 (No Retro)";
+            flavor = "hold-preferred";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <0>;
+            bindings = <&mo>, <&kp>;
+            // retro-tapを付けない: 時間経過だけでホールドを有効にする。
+        };
+
         lt_to_layer_0: lt_to_layer_0 {
             compatible = "zmk,behavior-hold-tap";
             label = "LAYER_TAP_TO_0";
@@ -62,7 +74,7 @@
 &kp Q           &kp W     &kp E     &kp R                &kp T                                             &kp Y      &kp U         &kp I       &kp O          &kp P    
 &mt LCTRL A     &kp S     &kp D     &kp F                &kp G                                             &kp H      &kp J         &kp K       &kp L          &mt RSFT MINUS
 &mt LSFT Z      &kp X     &kp C     &kp V                &kp B                                             &kp N      &kp M         &kp COMMA   &kp DOT        &mo 3
-                &kp LGUI  &kp LALT  &lt 2 INT_MUHENKAN   &lt 1 SPACE   &mt LSFT INT_HENKAN        &kp RET  &kp BSPC                             &kp DEL
+                &kp LGUI  &kp LALT  &lt 2 INT_MUHENKAN   &lt1 1 SPACE   &mt LSFT INT_HENKAN        &kp RET  &kp BSPC                             &kp DEL
             >;
         };
 
