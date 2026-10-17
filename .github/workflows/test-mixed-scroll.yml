@@ -1,0 +1,15 @@
+name: Mixed scroll logic
+on:
+  push:
+    paths: ["src/**", "tests/**", ".github/workflows/test-mixed-scroll.yml"]
+  pull_request:
+    paths: ["src/**", "tests/**", ".github/workflows/test-mixed-scroll.yml"]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test direction lock, scroll continuity and navigation rearming
+        run: |
+          cc -std=c11 -Wall -Wextra -Werror -fsanitize=undefined -o /tmp/mixed-scroll-test tests/mixed_scroll_test.c
+          /tmp/mixed-scroll-test

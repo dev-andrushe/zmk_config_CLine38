@@ -1,4 +1,8 @@
 name: CLine38
 build:
+  cmake: .
+  kconfig: Kconfig
   settings:
     board_root: .
+    snippet_root: .
+    dts_root: .

@@ -1,0 +1,6 @@
+config CLINE38_MIXED_SCROLL
+    bool "CLine38 mixed vertical scroll and horizontal gestures"
+    default y
+    depends on DT_HAS_ZMK_INPUT_PROCESSOR_MIXED_SCROLL_ENABLED
+    depends on ZMK_INPUT_PROCESSOR_LAYER_ROUTER
+    depends on !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL
