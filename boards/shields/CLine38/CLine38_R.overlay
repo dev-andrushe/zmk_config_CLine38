@@ -20,8 +20,7 @@
         layer = <3>;
         scale = <1>;
         scale-div = <1>;
-        start = <2>;
-        min-events = <3>;  // 短いフリックでも発動可能にする (既定値10)
+        start = <3>;
         move = <6>;
         stop = <1>;
         friction = <3>;
