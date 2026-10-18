@@ -13,8 +13,10 @@
 #include <zmk/events/layer_state_changed.h>
 #include <zmk/input_processor_layer_router.h>
 #include <zmk/keymap.h>
+#include <zmk/pointing/input_processor_runtime.h>
 
 #include "mixed_scroll_logic.h"
+#include "reference_scroll_logic.h"
 
 LOG_MODULE_REGISTER(cline38_mixed_scroll, CONFIG_ZMK_LOG_LEVEL);
 
@@ -22,11 +24,14 @@ struct mixed_device_config {
     struct mixed_config motion;
     uint8_t route_index;
     struct zmk_behavior_binding left, right;
+    const struct device *scroll_reference;
+    uint32_t default_multiplier, default_divisor;
 };
 
 struct mixed_device_data {
     const struct device *dev;
     struct mixed_state motion;
+    struct reference_scroll_state scale;
     int32_t frame_x, frame_y;
     uint32_t route_mask, active_mask;
     atomic_val_t epoch;
@@ -116,6 +121,7 @@ static int mixed_handle_event(const struct device *dev, struct input_event *even
     if (!active || data->epoch != epoch || data->route_mask != mask ||
         data->active_mask != active) {
         mixed_reset(&data->motion);
+        data->scale = (struct reference_scroll_state){0};
         data->frame_x = data->frame_y = 0;
         data->epoch = epoch;
         data->route_mask = mask;
@@ -142,8 +148,19 @@ static int mixed_handle_event(const struct device *dev, struct input_event *even
                                                 k_uptime_get());
         data->frame_x = data->frame_y = 0;
         if (result.scroll != 0) {
+            struct zmk_input_processor_runtime_config reference = {
+                .scale_multiplier = cfg->default_multiplier,
+                .scale_divisor = cfg->default_divisor,
+            };
+            zmk_input_processor_runtime_get_config(cfg->scroll_reference, NULL, &reference);
+            result.scroll = reference_scroll_step(&data->scale, result.scroll,
+                reference.scale_multiplier, reference.scale_divisor,
+                cfg->default_multiplier, cfg->default_divisor, reference.y_invert);
+        }
+        if (result.scroll != 0) {
             /* Separate device/listener: mouse scaling and gesture recognition
-             * cannot rescale or consume this wheel output. Never block the input
+             * cannot rescale or consume this wheel output. Layer 3's scale has
+             * already been applied exactly once. Never block the input
              * thread trying to enqueue to its own queue. No inertia is attached. */
             int err = input_report_rel(dev, INPUT_REL_WHEEL, result.scroll, true, K_NO_WAIT);
             if (err < 0) {
@@ -175,6 +192,8 @@ static const struct zmk_input_processor_driver_api mixed_api = {
 };
 
 #define MIXED_INST(n)                                                                              \
+    BUILD_ASSERT(DT_PROP(DT_INST_PHANDLE(n, scroll_reference), scale_multiplier) > 0);            \
+    BUILD_ASSERT(DT_PROP(DT_INST_PHANDLE(n, scroll_reference), scale_divisor) > 0);               \
     BUILD_ASSERT(DT_INST_PROP(n, direction_threshold) > 0);                                       \
     BUILD_ASSERT(DT_INST_PROP(n, gesture_threshold) >= DT_INST_PROP(n, direction_threshold));     \
     BUILD_ASSERT(DT_INST_PROP(n, diagonal_threshold) >= DT_INST_PROP(n, direction_threshold));    \
@@ -188,6 +207,9 @@ static const struct zmk_input_processor_driver_api mixed_api = {
         .route_index = DT_INST_PROP(n, route_index),                                              \
         .left = ZMK_KEYMAP_EXTRACT_BINDING(0, DT_DRV_INST(n)),                                    \
         .right = ZMK_KEYMAP_EXTRACT_BINDING(1, DT_DRV_INST(n)),                                   \
+        .scroll_reference = DEVICE_DT_GET(DT_INST_PHANDLE(n, scroll_reference)),                  \
+        .default_multiplier = DT_PROP(DT_INST_PHANDLE(n, scroll_reference), scale_multiplier),    \
+        .default_divisor = DT_PROP(DT_INST_PHANDLE(n, scroll_reference), scale_divisor),            \
     };                                                                                            \
     DEVICE_DT_INST_DEFINE(n, mixed_init, NULL, &mixed_data_##n, &mixed_config_##n, POST_KERNEL,     \
                           CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &mixed_api);
