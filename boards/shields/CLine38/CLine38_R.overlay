@@ -123,6 +123,9 @@
     zoomer {
         layers = <8>;
         input-processors = <&slow_zoom>;
+        // Kitは後続処理を遮断するoverrideのレイヤーを選択不可にする。
+        // slow_zoomがXYを値0のWHEELへ消費してから通すので、二重発動しない。
+        process-next;
     };
 
     scroller {
