@@ -1,4 +1,4 @@
-description: Rate-limited Ctrl-wheel zoom, with left and right behavior bindings
+description: Rate-limited Ctrl-wheel zoom, with editable left and right gesture action slots
 compatible: "zmk,input-processor-slow-zoom"
 
 properties:
@@ -13,7 +13,7 @@ properties:
   bindings:
     type: phandle-array
     required: true
-    description: Left and right behaviors, in that order
+    description: Left and right behaviors (gesture_action slots 6 and 7), in that order
   counts-per-step:
     type: int
     default: 64

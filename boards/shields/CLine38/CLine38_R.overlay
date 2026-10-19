@@ -15,8 +15,7 @@
         compatible = "zmk,input-processor-slow-zoom";
         #input-processor-cells = <0>;
         layer = <8>;
-        // Layer 8だけファームウェアの値を優先。Kitの保存済みスロットを参照しない。
-        bindings = <&kp LANG2>, <&kp LANG1>;
+        bindings = <&gesture_action 6>, <&gesture_action 7>;
         counts-per-step = <64>; // 通常スクロール初期値1/8の8倍の移動で1段階
         min-interval-ms = <200>;
         ctrl-settle-ms = <40>;
@@ -147,11 +146,11 @@
 &gesture_action {
     reserved-layers = <0 1 2 3 4 5 6>;
     // Group 1の上下スロットは使用しない。左右のみころころKitで変更可能。
-    // Group 2の初期値。Layer 8は上のslow_zoom固定値を使う。
+    // Group 2も上下スロットは不使用、左右はころころKitで変更可能。
     // Group 3〜4の初期値は標準プリセットと同一。
     default-bindings =
         <&none>, <&none>, <&kp LA(LEFT)>, <&kp LA(RIGHT)>,
-        <&none>, <&none>, <&kp LANG2>, <&kp LANG1>,
+        <&none>, <&none>, <&kp LA(LEFT)>, <&kp LA(RIGHT)>,
         <&kp LC(HOME)>, <&kp LC(END)>, <&kp LA(LEFT)>, <&kp LA(RIGHT)>,
         <&kp LC(Z)>, <&kp LC(Y)>, <&kp LC(C)>, <&kp LC(V)>;
 };
@@ -161,7 +160,7 @@
         display-name = "Group 1: Scroll + Navigation";
     };
     group2 {
-        display-name = "Group 2: Zoom + Language";
+        display-name = "Group 2: Zoom + Navigation";
     };
 };
 
