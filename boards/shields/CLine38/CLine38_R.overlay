@@ -146,11 +146,11 @@
 &gesture_action {
     reserved-layers = <0 1 2 3 4 5 6>;
     // Group 1の上下スロットは使用しない。左右のみころころKitで変更可能。
-    // Group 2も上下スロットは不使用、左右はころころKitで変更可能。
+    // Group 2は上下ズーム、左LANG2・右LANG1。左右はころころKitで変更可能。
     // Group 3〜4の初期値は標準プリセットと同一。
     default-bindings =
         <&none>, <&none>, <&kp LA(LEFT)>, <&kp LA(RIGHT)>,
-        <&none>, <&none>, <&kp LA(LEFT)>, <&kp LA(RIGHT)>,
+        <&none>, <&none>, <&kp LANG2>, <&kp LANG1>,
         <&kp LC(HOME)>, <&kp LC(END)>, <&kp LA(LEFT)>, <&kp LA(RIGHT)>,
         <&kp LC(Z)>, <&kp LC(Y)>, <&kp LC(C)>, <&kp LC(V)>;
 };
@@ -160,7 +160,7 @@
         display-name = "Group 1: Scroll + Navigation";
     };
     group2 {
-        display-name = "Group 2: Zoom + Navigation";
+        display-name = "Group 2: Zoom + Language";
     };
 };
 
