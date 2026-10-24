@@ -191,7 +191,7 @@ static int ctrl8_pressed(struct zmk_behavior_binding *binding,
     hold_source = event.source;
     layer_owned = !zmk_keymap_layer_active(8);
     /* Activating the layer cancels old scroll inertia before Ctrl goes down. */
-    zmk_keymap_layer_activate(8);
+    zmk_keymap_layer_activate(8, false);
     if (!transaction) { send_ctrl(true); }
     cline38_retro_unlock();
     return ZMK_BEHAVIOR_OPAQUE;
@@ -203,7 +203,7 @@ static int ctrl8_released(struct zmk_behavior_binding *binding,
     cline38_retro_lock();
     if (held && event.position == hold_position && event.source == hold_source) {
         held = physical_down = false;
-        if (layer_owned) { zmk_keymap_layer_deactivate(8); }
+        if (layer_owned) { zmk_keymap_layer_deactivate(8, false); }
         layer_owned = false;
         send_ctrl(false);
     }

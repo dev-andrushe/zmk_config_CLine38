@@ -98,8 +98,8 @@ struct zmk_endpoint_changed { int endpoint; };
 ZMK_EVENT_DECLARE(zmk_endpoint_changed);
 static bool layers[16];
 static bool zmk_keymap_layer_active(int layer) { return layers[layer]; }
-static int zmk_keymap_layer_activate(int layer) { layers[layer] = true; return 0; }
-static int zmk_keymap_layer_deactivate(int layer) { layers[layer] = false; return 0; }
+static int zmk_keymap_layer_activate(int layer, bool locking) { layers[layer] = true; return 0; }
+static int zmk_keymap_layer_deactivate(int layer, bool locking) { layers[layer] = false; return 0; }
 static int mod_counts[8], explicit_mods, implicit_mods;
 static int zmk_hid_register_mods(int flags) {
     for (int i = 0; i < 8; ++i) { if (flags & (1 << i)) { ++mod_counts[i]; explicit_mods |= 1 << i; } }
