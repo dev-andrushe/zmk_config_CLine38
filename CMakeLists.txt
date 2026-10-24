@@ -12,3 +12,8 @@ endif()
 if(CONFIG_CLINE38_RETRO_POINTER)
   include(cmake/retro_pointer.cmake)
 endif()
+
+if(CONFIG_CLINE38_CTRL_LAYER8)
+  target_sources(app PRIVATE src/behavior_ctrl_layer8.c)
+  include(cmake/ctrl_layer8.cmake)
+endif()

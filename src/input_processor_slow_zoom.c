@@ -20,6 +20,7 @@
 #include "retro_pointer.h"
 #endif
 #include "slow_zoom_logic.h"
+#include "ctrl_layer8.h"
 
 LOG_MODULE_REGISTER(cline38_slow_zoom, CONFIG_ZMK_LOG_LEVEL);
 K_MUTEX_DEFINE(slow_zoom_mutex);
@@ -101,10 +102,9 @@ ZMK_SUBSCRIPTION(cline38_slow_zoom, zmk_layer_state_changed);
 static int zoom_endpoint_changed(const zmk_event_t *event) {
     ARG_UNUSED(event);
     zoom_lock();
-    /* endpoints.c cleared all HID counts before this event. Forget ownership
-     * without unregistering a count that no longer exists on the new endpoint. */
+    /* Pinned hid.c clears report bytes, but retains explicit modifier counts. */
     struct slow_zoom_device_data *data = DEVICE_DT_INST_GET(0)->data;
-    data->ctrl_owned = data->ctrl_ready = false;
+    zoom_release_ctrl(data);
     ++data->epoch;
     slow_zoom_reset(&data->motion, k_uptime_get());
     zoom_unlock();
@@ -119,7 +119,7 @@ static void zoom_tap_handler(struct k_work *work) {
     struct slow_zoom_device_data *data =
         CONTAINER_OF(k_work_delayable_from_work(work), struct slow_zoom_device_data, tap_work);
     struct zmk_behavior_binding_event event = {
-        .position = INT32_MAX - 2,
+        .position = CLINE38_ZOOM_POSITION,
         .timestamp = k_uptime_get(),
 #if IS_ENABLED(CONFIG_ZMK_SPLIT)
         .source = ZMK_POSITION_STATE_CHANGE_SOURCE_LOCAL,
@@ -133,11 +133,25 @@ static void zoom_tap_handler(struct k_work *work) {
             zoom_unlock();
             return;
         }
+#if IS_ENABLED(CONFIG_CLINE38_CTRL_LAYER8)
+        if (!cline38_ctrl8_begin()) {
+            k_work_schedule(&data->tap_work, K_MSEC(5));
+            zoom_unlock();
+            return;
+        }
+        cline38_ctrl8_invoke(&data->tap_binding, event, true);
+#else
         zmk_behavior_invoke_binding(&data->tap_binding, event, true);
+#endif
         data->tap_pressed = true;
         k_work_schedule(&data->tap_work, K_MSEC(20));
     } else {
+#if IS_ENABLED(CONFIG_CLINE38_CTRL_LAYER8)
+        cline38_ctrl8_invoke(&data->tap_binding, event, false);
+        cline38_ctrl8_end();
+#else
         zmk_behavior_invoke_binding(&data->tap_binding, event, false);
+#endif
         data->tap_pressed = data->tap_busy = false;
     }
     zoom_unlock();
@@ -169,6 +183,14 @@ static int zoom_handle_event(const struct device *dev, struct input_event *event
     const struct slow_zoom_device_config *cfg = dev->config;
     struct slow_zoom_device_data *data = dev->data;
     if (!data->active) {
+        zoom_unlock();
+        return ZMK_INPUT_PROC_CONTINUE;
+    }
+    if (cline38_ctrl8_transaction_active()) {
+        /* No zoom-owned Ctrl or new pointer gesture may join the current
+         * navigation/macro transaction. Drop frames instead of replaying them. */
+        event->code = INPUT_REL_WHEEL;
+        event->value = 0;
         zoom_unlock();
         return ZMK_INPUT_PROC_CONTINUE;
     }

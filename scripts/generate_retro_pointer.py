@@ -21,6 +21,7 @@ def adapt_hold_tap(text):
 #include <zephyr/kernel.h>
 #include <zephyr/sys/atomic.h>
 #include "retro_pointer.h"
+#include "ctrl_layer8.h"
 K_MUTEX_DEFINE(cline38_retro_mutex);
 static atomic_t cline38_retro_generation;
 uint32_t cline38_retro_epoch(void) { return (uint32_t)atomic_get(&cline38_retro_generation); }
@@ -57,6 +58,11 @@ ZMK_LISTENER(behavior_hold_tap, behavior_hold_tap_listener);''')
     text = replace_once(text, "static int behavior_hold_tap_init(const struct device *dev)", '''
 void behavior_hold_tap_timer_work_handler(struct k_work *item) {
     cline38_retro_lock();
+    if (cline38_ctrl8_transaction_active()) {
+        k_work_schedule(k_work_delayable_from_work(item), K_MSEC(5));
+        cline38_retro_unlock();
+        return;
+    }
     behavior_hold_tap_timer_work_handler_impl(item);
     cline38_retro_unlock();
 }

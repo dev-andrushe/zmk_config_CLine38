@@ -20,6 +20,12 @@ config CLINE38_SLOW_ZOOM
     depends on ZMK_POINTING
     depends on !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL
 
+config CLINE38_CTRL_LAYER8
+    bool "Source-owned Ctrl plus layer 8 Hold-Tap"
+    default y
+    depends on DT_HAS_CLINE38_BEHAVIOR_CTRL_LAYER8_ENABLED
+    depends on CLINE38_RETRO_POINTER && CLINE38_SLOW_ZOOM
+
 config CLINE38_RETRO_POINTER_THRESHOLD
     int "Raw movement counts required to resolve a Retro Tap hold"
     default 8

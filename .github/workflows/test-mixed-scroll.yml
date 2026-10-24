@@ -22,6 +22,8 @@ jobs:
           python -m unittest discover -s tests -p 'test_*.py'
       - name: Test first-key LT and MT holds with pinned ZMK event dispatch
         run: python tests/run_hold_tap_regression.py
+      - name: Test Ctrl plus Layer8 and complete gesture HID transactions
+        run: python tests/run_ctrl8_regression.py
       - name: Test slow zoom step size, rate limit and horizontal gestures
         run: |
           cc -std=c11 -Wall -Wextra -Werror -fsanitize=undefined -o /tmp/slow-zoom-test tests/slow_zoom_test.c

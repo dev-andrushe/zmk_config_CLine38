@@ -2,7 +2,13 @@
  * Included in the generated upstream Hold-Tap translation unit. */
 static bool cline38_retro_eligible(const struct active_hold_tap *hold) {
     return hold->config && hold->position != ZMK_BHV_HOLD_TAP_POSITION_NOT_USED && !hold->work_is_cancelled &&
-           hold->config->retro_tap &&
+           (hold->config->retro_tap
+#if defined(CONFIG_CLINE38_CTRL_LAYER8) && CONFIG_CLINE38_CTRL_LAYER8
+            ||
+            (hold->status == STATUS_UNDECIDED &&
+             cline38_ctrl8_hold_behavior(hold->config->hold_behavior_dev))
+#endif
+           ) &&
            (hold->status == STATUS_UNDECIDED || hold->status == STATUS_HOLD_TIMER);
 }
 

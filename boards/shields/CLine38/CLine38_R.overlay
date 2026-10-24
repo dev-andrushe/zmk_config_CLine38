@@ -153,7 +153,7 @@
     // Group 3〜4の初期値は標準プリセットと同一。
     default-bindings =
         <&none>, <&none>, <&kp LA(LEFT)>, <&kp LA(RIGHT)>,
-        <&none>, <&none>, <&kp LA(LEFT)>, <&kp LA(RIGHT)>,
+        <&none>, <&none>, <&kp LANG2>, <&kp LANG1>,
         <&kp LC(HOME)>, <&kp LC(END)>, <&kp LA(LEFT)>, <&kp LA(RIGHT)>,
         <&kp LC(Z)>, <&kp LC(Y)>, <&kp LC(C)>, <&kp LC(V)>;
 };
@@ -163,7 +163,7 @@
         display-name = "Group 1: Scroll + Navigation";
     };
     group2 {
-        display-name = "Group 2: Zoom + Navigation";
+        display-name = "Group 2: Zoom + Language";
     };
 };
 

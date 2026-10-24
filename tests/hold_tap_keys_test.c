@@ -31,7 +31,7 @@ static int active_layer, held_mod, tap_down, tap_up, other_down, other_up;
 static int seen_layer, seen_mod;
 
 const struct device *zmk_behavior_get_binding(const char *name) { return &hold_device; }
-int zmk_behavior_invoke_binding(struct zmk_behavior_binding *binding,
+int zmk_behavior_invoke_binding(const struct zmk_behavior_binding *binding,
                                 struct zmk_behavior_binding_event event, bool pressed) {
     if (!strcmp(binding->behavior_dev, "mo")) {
         active_layer = pressed ? binding->param1 : 0;
