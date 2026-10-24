@@ -1,0 +1,33 @@
+description: CLine38 continuous vertical scrolling with horizontal gesture action slots
+compatible: "zmk,input-processor-mixed-scroll"
+
+properties:
+  "#input-processor-cells":
+    type: int
+    const: 0
+  track-remainders:
+    type: boolean
+  route-index:
+    type: int
+    required: true
+    description: Zero-based layer-router route whose runtime layer mask enables this mode
+  bindings:
+    type: phandle-array
+    required: true
+    description: Left and right behaviors, in that order
+  scroll-reference:
+    type: phandle
+    required: true
+    description: Layer 3 runtime processor whose persistent scale and Y inversion are used
+  direction-threshold:
+    type: int
+    default: 8
+  gesture-threshold:
+    type: int
+    default: 100
+  diagonal-threshold:
+    type: int
+    default: 24
+  idle-ms:
+    type: int
+    default: 250

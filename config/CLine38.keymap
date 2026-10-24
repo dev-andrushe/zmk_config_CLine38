@@ -44,6 +44,34 @@
     };
 
     behaviors {
+        ctrl8_hold: ctrl_layer8_hold {
+            compatible = "cline38,behavior-ctrl-layer8";
+            #binding-cells = <1>;
+            display-name = "Ctrl + Layer 8 Hold";
+        };
+
+        ctrl8: ctrl_layer8_tap {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            display-name = "Ctrl + Layer 8 (No Retro)";
+            flavor = "hold-preferred";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <0>;
+            bindings = <&ctrl8_hold>, <&kp>;
+        };
+
+        // レイヤー1用。通常の&ltと&mtのRetro Tap設定には影響しない。
+        lt1: layer_tap_1_no_retro {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            display-name = "Layer-Tap 1 (No Retro)";
+            flavor = "hold-preferred";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <0>;
+            bindings = <&mo>, <&kp>;
+            // retro-tapを付けない: 時間経過だけでホールドを有効にする。
+        };
+
         lt_to_layer_0: lt_to_layer_0 {
             compatible = "zmk,behavior-hold-tap";
             label = "LAYER_TAP_TO_0";
@@ -60,9 +88,9 @@
         default_layer {
             bindings = <
 &kp Q           &kp W     &kp E     &kp R                &kp T                                             &kp Y      &kp U         &kp I       &kp O          &kp P    
-&mt LCTRL A     &kp S     &kp D     &kp F                &kp G                                             &kp H      &kp J         &kp K       &kp L          &mt RSFT MINUS
+&ctrl8 8 A      &kp S     &kp D     &kp F                &kp G                                             &kp H      &kp J         &kp K       &kp L          &mt RSFT MINUS
 &mt LSFT Z      &kp X     &kp C     &kp V                &kp B                                             &kp N      &kp M         &kp COMMA   &kp DOT        &mo 3
-                &kp LGUI  &kp LALT  &lt 2 INT_MUHENKAN   &lt 1 SPACE   &mt LSFT INT_HENKAN        &kp RET  &kp BSPC                             &kp DEL
+                &kp LGUI  &kp LALT  &lt 2 INT_MUHENKAN   &lt1 1 SPACE   &mt LSFT INT_HENKAN        &kp RET  &kp BSPC                             &kp DEL
             >;
         };
 
@@ -125,5 +153,47 @@
          &trans   &trans   &trans   &trans   &trans      &trans   &trans                     &trans
             >;
         };
+
+        // ころころKit: DYA Studioで任意のキーに MO 7〜10 を割り当てる。
+        gesture_1 {
+            display-name = "GESTURE1";
+            bindings = <
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans
+            >;
+        };
+
+        gesture_2 {
+            display-name = "GESTURE2";
+            bindings = <
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans
+            >;
+        };
+
+        gesture_3 {
+            display-name = "GESTURE3";
+            bindings = <
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans
+            >;
+        };
+
+        gesture_4 {
+            display-name = "GESTURE4";
+            bindings = <
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans &trans &trans
+            >;
+        };
+
     };
 };
